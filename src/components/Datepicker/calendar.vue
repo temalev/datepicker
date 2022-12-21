@@ -86,13 +86,15 @@ export default {
   methods: {
     ClickNextMonth (){
         this.currentMonth++
-        if (this.nextMonthInt === 0 || this.currentMonthNameInt === 0) {
+
+        if (this.currentMonth === 12) {
           this.currentYear++
           this.currentMonth = 0}
     },
       ClickLastMonth (){
         this.currentMonth--
-        if (this.currentMonthNameInt === 0 || this.nextMonthInt === 0) {
+        
+        if (this.currentMonth === -1) {
           this.currentYear--
           this.currentMonth = 11}
       },
