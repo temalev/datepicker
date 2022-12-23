@@ -1,44 +1,45 @@
 <template>
-<div class="main">
-  <header>
-    <button @click="ClickLastMonth"> &lt; </button>
-    <span class="title">{{ currentMonthName }} {{ howYear }}</span>
-    <button @click="ClickNextMonth"> &gt; </button>
-  </header>
+  <div class="main">
+    <header>
+      <button @click="clickLastMonth">&lt;</button>
+      <span class="title">{{ currentMonthName }} {{ howYear }}</span>
+      <button @click="clickNextMonth">&gt;</button>
+    </header>
 
-  <div class="body">
-    <div class="daysOfWeek">
-      <div v-for="dayOfWeek in daysString" :key="dayOfWeek" class="dayOfWeek">
-        {{ dayOfWeek }}
+    <div class="body">
+      <div class="daysOfWeek">
+        <div v-for="dayOfWeek in daysString" :key="dayOfWeek" class="dayOfWeek">
+          {{ dayOfWeek }}
+        </div>
       </div>
-    </div>
 
-    <div class="daysContainer">
-      <div v-for="dayNull in dayWeek" :key="dayNull" class="day null" />
+      <div class="daysContainer">
+        <div v-for="dayNull in dayWeek" :key="dayNull" class="day null" />
 
-      <div v-for="day in lastDayMonth"
+        <div
+          v-for="day in lastDayMonth"
           :key="day.timestamp"
           class="day"
-          :class="isClassDay(day)"
+          :class="getClassDay(day)"
           @click="dayChoose(day)"
-          >
+        >
           {{ day.name }}
-          <span class="tooltip">{{ isTooltipEvent(day) }}</span>
+          <span class="tooltip">{{ getTooltipEvent(day) }}</span>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
-  name: 'Calendar',
+  name: "Calendar",
 
   props: {
     events: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
 
   data() {
@@ -48,98 +49,104 @@ export default {
       currentYear: new Date().getFullYear(),
       currentDay: new Date().getDate(),
       YearNow: new Date().getFullYear(),
-      chooseDay: null
-    }
+      chooseDay: null,
+    };
   },
 
   computed: {
-
     currentMonthName() {
-      return new Date(this.currentYear, this.currentMonth).toLocaleString("default", {month: "long"})
+      return new Date(this.currentYear, this.currentMonth).toLocaleString(
+        "default",
+        { month: "long" }
+      );
     },
 
     howYear() {
-      if (this.nextMonthInt === 0) return this.currentYear
-      else return this.currentYear
+      if (this.nextMonthInt === 0) return this.currentYear;
+      else return this.currentYear;
     },
 
     currentMonthNameInt() {
-        return new Date(this.currentYear, this.currentMonth).getMonth()
-      },
+      return new Date(this.currentYear, this.currentMonth).getMonth();
+    },
 
     lastDayMonth() {
-      const count = new Date(this.currentYear, this.currentMonth+1, 0).getDate()
-      const arr = []
+      const count = new Date(
+        this.currentYear,
+        this.currentMonth + 1,
+        0
+      ).getDate();
+      const arr = [];
 
       for (let i = 1; i <= count; i++) {
         arr.push({
           name: i,
-          timestamp: new Date(this.currentYear, this.currentMonth, i).getTime()
-        })
+          timestamp: new Date(this.currentYear, this.currentMonth, i).getTime(),
+        });
       }
-      return arr
+      return arr;
     },
 
     dayWeek() {
-      return new Date(this.currentYear, this.currentMonth, 0).getDay()
-    }
+      return new Date(this.currentYear, this.currentMonth, 0).getDay();
+    },
   },
   methods: {
-    isTooltipEvent (day) {
-      const dayEvent = this.events.find(el => el.day === day.timestamp)
+    getTooltipEvent(day) {
+      const dayEvent = this.events.find((el) => el.day === day.timestamp);
       if (day.timestamp == dayEvent?.day) {
         console.log(dayEvent?.info);
-        return dayEvent?.info
+        return dayEvent?.info;
       }
     },
-    isClassDay(day) {
+    getClassDay(day) {
       if (this.chooseDay === day.timestamp) {
-        return 'choose'
+        return "choose";
       }
 
-      const dayEvent = this.events.find(el => el.day === day.timestamp)
+      const dayEvent = this.events.find((el) => el.day === day.timestamp);
 
       if (day.timestamp == dayEvent?.day) {
-        console.log('event');
-        return 'event'
+        return "event";
       }
-      
     },
 
     dayChoose(day) {
-      this.chooseDay = this.chooseDay != day.timestamp ? day.timestamp : null
+      this.chooseDay = this.chooseDay != day.timestamp ? day.timestamp : null;
 
       console.log(this.chooseDay);
 
-      const date = new Date(this.chooseDay)
+      const date = new Date(this.chooseDay);
       const fullDate = {
-        dateFormatted :[
-        date.getDate().toString().padStart(2, '0'),
-        (date.getMonth()+1).toString().padStart(2, '0'),
-        date.getFullYear()
-      ].join('.'),
-        timestamp: this.chooseDay}
-      
+        dateFormatted: [
+          date.getDate().toString().padStart(2, "0"),
+          (date.getMonth() + 1).toString().padStart(2, "0"),
+          date.getFullYear(),
+        ].join("."),
+        timestamp: this.chooseDay,
+      };
 
-      this.$emit('chooseDay', this.chooseDay != null ? fullDate : null)
+      this.$emit("chooseDay", this.chooseDay != null ? fullDate : null);
     },
 
-    ClickNextMonth() {
-        this.currentMonth++
+    clickNextMonth() {
+      this.currentMonth++;
 
-        if (this.currentMonth === 12) {
-          this.currentYear++
-          this.currentMonth = 0}
+      if (this.currentMonth === 12) {
+        this.currentYear++;
+        this.currentMonth = 0;
+      }
     },
-      ClickLastMonth() {
-        this.currentMonth--
+    clickLastMonth() {
+      this.currentMonth--;
 
-        if (this.currentMonth === -1) {
-          this.currentYear--
-          this.currentMonth = 11}
-      },
-  }
-}
+      if (this.currentMonth === -1) {
+        this.currentYear--;
+        this.currentMonth = 11;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -167,7 +174,6 @@ header {
   display: flex;
   width: 100%;
   justify-content: flex-start;
-  
 }
 
 .dayOfWeek {
@@ -175,7 +181,7 @@ header {
   height: 30px;
 }
 
-.daysContainer{
+.daysContainer {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -204,21 +210,21 @@ button {
   background: none;
   border: none;
   cursor: pointer;
-  opacity: .5;
-  transition: .2s;
+  opacity: 0.5;
+  transition: 0.2s;
 }
 
 button:hover {
   opacity: 1;
 }
 
-.choose{
+.choose {
   background-color: rgba(34, 113, 24, 0.824);
   color: #f6f6f6;
   box-shadow: inset 0 0 5px rgba(23, 76, 16, 0.824);
 }
 
-.event{
+.event {
   position: relative;
   outline: 2px solid rgba(34, 113, 24, 0.824);
 }
@@ -226,10 +232,10 @@ button:hover {
 .tooltip {
   position: absolute;
   min-width: 100px;
-	border: 1px solid rgba(34, 113, 24, 0.824);
+  border: 1px solid rgba(34, 113, 24, 0.824);
   border-radius: 15px;
   padding: 5px 10px;
-	cursor: help;
+  cursor: help;
   display: none;
   justify-content: center;
   align-items: center;
@@ -241,9 +247,9 @@ button:hover {
 
 .tooltip::before {
   transform: translateX(-50%);
-    border-width: 4px 6px 0 6px;
-    border-style: solid;
-    border-color: rgba(0,0,0,0.7) transparent transparent transparent;
+  border-width: 4px 6px 0 6px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.7) transparent transparent transparent;
 }
 
 .event:hover .tooltip {

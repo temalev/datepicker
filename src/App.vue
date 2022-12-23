@@ -1,20 +1,19 @@
 <template>
   <div id="app">
-      <h2> Добавьте праздник </h2>
+    <h2>Добавьте праздник</h2>
     <Datepicker />
-    
   </div>
 </template>
 
 <script>
-import Datepicker from './components/Datepicker'
+import Datepicker from "./components/Datepicker";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    Datepicker
-  }
-}
+    Datepicker,
+  },
+};
 </script>
 
 <style>
