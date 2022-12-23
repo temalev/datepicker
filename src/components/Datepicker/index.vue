@@ -1,7 +1,7 @@
 <template>
   <div class="mainContainer">
     
-    <form>
+    <div class="form">
       <div class="inputContainer">
         <span class="title">Название события</span>
       <input placeholder="День рождение Бобика" v-model="inputEvent" class="inputEvent" type="text" />
@@ -16,7 +16,7 @@
     </div>
     </div>
     <button @click="addEvent" class="btnEvent">Добавить событие</button>
-    </form>
+  </div>
   </div>
 
 </template>
@@ -99,7 +99,7 @@ export default {
     gap: 10px;
   }
 
-  form{
+  .form{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
