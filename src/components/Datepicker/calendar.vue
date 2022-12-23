@@ -23,6 +23,7 @@
           @click="dayChoose(day)"
           >
           {{ day.name }}
+          <span class="tooltip">{{ isTooltipEvent(day) }}</span>
       </div>
     </div>
   </div>
@@ -84,6 +85,13 @@ export default {
     }
   },
   methods: {
+    isTooltipEvent (day) {
+      const dayEvent = this.events.find(el => el.day === day.timestamp)
+      if (day.timestamp == dayEvent?.day) {
+        console.log(dayEvent?.info);
+        return dayEvent?.info
+      }
+    },
     isClassDay(day) {
       if (this.chooseDay === day.timestamp) {
         return 'choose'
@@ -101,16 +109,19 @@ export default {
     dayChoose(day) {
       this.chooseDay = this.chooseDay != day.timestamp ? day.timestamp : null
 
-      console.log(day.timestamp);
+      console.log(this.chooseDay);
 
       const date = new Date(this.chooseDay)
-      const fullDate = [
+      const fullDate = {
+        dateFormatted :[
         date.getDate().toString().padStart(2, '0'),
         (date.getMonth()+1).toString().padStart(2, '0'),
         date.getFullYear()
-      ].join('.')
+      ].join('.'),
+        timestamp: this.chooseDay}
+      
 
-      this.$emit('chooseDay', fullDate)
+      this.$emit('chooseDay', this.chooseDay != null ? fullDate : null)
     },
 
     ClickNextMonth() {
@@ -134,6 +145,7 @@ export default {
 <style scoped>
 .main {
   position: absolute;
+  z-index: 2;
   top: 45px;
   background-color: #fff;
   width: 280px;
@@ -207,6 +219,39 @@ button:hover {
 }
 
 .event{
+  position: relative;
   outline: 2px solid rgba(34, 113, 24, 0.824);
+}
+
+.tooltip {
+  position: absolute;
+  min-width: 100px;
+	border: 1px solid rgba(34, 113, 24, 0.824);
+  border-radius: 15px;
+  padding: 5px 10px;
+	cursor: help;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  background-color: #fff;
+  bottom: 40px;
+  box-shadow: 0 2px 5px rgba(213, 213, 213, 0.635);
+}
+
+.tooltip::before {
+  transform: translateX(-50%);
+    border-width: 4px 6px 0 6px;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.7) transparent transparent transparent;
+}
+
+.event:hover .tooltip {
+  display: flex;
+  opacity: 1;
+}
+
+.tooltip:hover {
+  display: flex;
 }
 </style>

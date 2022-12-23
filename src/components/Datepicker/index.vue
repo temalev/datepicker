@@ -1,19 +1,23 @@
 <template>
-
-<div class="mainContainer">
-  <span class="title">Выберите дату</span>
-  <div class="wrapper">
-    <input  class="inputDate" type="text" v-model="model">
-    <div @click="isCalendar = !isCalendar" class="btnCalendar" />
-    <calendar v-if="isCalendar" :events="events" @chooseDay="chooseDay" />
+  <div class="mainContainer">
     
+    <form>
+      <div class="inputContainer">
+        <span class="title">Название события</span>
+      <input placeholder="День рождение Бобика" v-model="inputEvent" class="inputEvent" type="text" />
+      </div>
+      
+      <div class="inputContainer">
+    <span class="title">Выберите дату</span>
+    <div class="wrapper">
+      <input placeholder="02.02.2023"  class="inputDate" type="text" v-model="model" readOnly="true" >
+      <div @click="isCalendar = !isCalendar" class="btnCalendar" />
+      <calendar v-if="isCalendar" :events="events" @chooseDay="chooseDay" />
+    </div>
+    </div>
+    <button @click="addEvent" class="btnEvent">Добавить событие</button>
+    </form>
   </div>
-
-  <input v-model="inputEvent" class="inputEvent" type="text">
-
-  <button class="btnEvent">Добавить событие</button>
-
-</div>
 
 </template>
 
@@ -56,66 +60,33 @@ export default {
       {
         info: "День России",
         day: 1686517200000
-      }]
-    }
-  },
-
-  watch: {
-    model(value) {
-      const rule = value.replace(/[^\d]/g,'')
-      this.model = this.formatDateDDMMYYYY(rule)
+      }],
+      chooseDayTimestamp: null
     }
   },
 
   methods: {
-    chooseDay(val) {
-      this.model = val
-    },
-
-    formatDateDDMMYYYY(value) {
-      const dateFormatMask = "##.##.####"
-
-      let i = 0;
-      let lastReplaceIdx = -1;
-
-      const filledMask = dateFormatMask.replace(/#/g, (_, j) => {
-        if (i >= value.length) {
-      return "#"
+    addEvent() {
+      if (this.inputEvent) {
+        const newEvent = {
+        info: this.inputEvent,
+        day: this.chooseDayTimestamp
       }
+      this.events.push(newEvent)
+      }
+      console.log(this.events);
 
-      lastReplaceIdx = j;
-
-      return value[i++];
-    })
-
-    const [day, month] = filledMask.split(".");
-
-  const d1 = day[0];
-  const d2 = day[1];
-
-  if (+day >= 31 && +day <= 39) {
-    return filledMask
-      .replace(/\d{2}/g, `0${d1}`)
-      .replace(/##/g, `0${d2}`)
-      .slice(0, 5);
+      this.inputEvent = null
+      this.model = null
+      
+    },
+    chooseDay(val) {
+      this.model = val.dateFormatted
+      this.chooseDayTimestamp = val.timestamp
+    },
   }
 
-  if (+d1 > 3 && +d1 <= 9) {
-    return filledMask.replace(/\d#/g, `0${d1}`).slice(0, 2);
   }
-
-  const m1 = month[0];
-
-  if (+m1 >= 2 && +m1 <= 9) {
-    return filledMask.replace(/\d#/g, `0${m1}`).slice(0, 5);
-  }
-
-
-  return filledMask.substring(0, lastReplaceIdx + 1)
-    }
-  }
-
-}
 </script>
 
 <style scoped>
@@ -128,7 +99,22 @@ export default {
     gap: 10px;
   }
 
+  form{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .inputContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
   .wrapper {
+    cursor: pointer;
     position: relative;
     width: 150px;
     border: 1px solid rgba(206, 206, 206, 0.757);
@@ -140,6 +126,7 @@ export default {
   }
 
   .inputDate {
+    cursor: pointer;
     border: none;
     outline: none;
     font-size: 18px;
@@ -184,4 +171,5 @@ export default {
     box-shadow: 0 2px 5px rgba(38, 81, 35, 0.435);
     border: 1px solid rgba(111, 111, 111, 0.757);
   }
+
 </style>

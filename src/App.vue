@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <h2> Добавьте праздник </h2>
+      <h2> Добавьте праздник </h2>
     <Datepicker />
+    
   </div>
 </template>
 
