@@ -12,8 +12,9 @@
         {{ dayOfWeek }}
       </div>
     </div>
+
     <div class="daysContainer">
-      <div v-for="dayNull in dayWeek" :key="dayNull" class="day null"></div>
+      <div v-for="dayNull in dayWeek" :key="dayNull" class="day null" />
 
       <div v-for="day in lastDayMonth"
           :key="day.timestamp"
@@ -21,79 +22,95 @@
           :class="chooseDay === day.timestamp 
           ? 'choose' 
           : 'day'"
-          @click="chooseDay = chooseDay != day.timestamp ? day.timestamp : null "
+          @click="dayChoose(day)"
           >
-          {{ day.name }}
+          {{ day.name }} {{ isClassDay(day) }}
       </div>
     </div>
   </div>
 </div>
 </template>
 <script>
+
 export default {
   name: 'Calendar',
 
-  data(){
+  props: {
+    events: {
+      type: Array,
+      default: () => []
+    }
+  },
+
+  data() {
     return {
       daysString: ["пн", "вт", "ср", "чт", "пт", "сб", "вс"],
       currentMonth: new Date().getMonth(),
       currentYear: new Date().getFullYear(),
-      currentMonthNow: new Date().getMonth(),
-      currentYearNow: new Date().getFullYear(),
       currentDay: new Date().getDate(),
       YearNow: new Date().getFullYear(),
-      currentYearNext: new Date().getFullYear()+1,
-      chooseDay: 1669928400000,
-      events: []
+      chooseDay: null
     }
   },
 
   computed: {
-    currentMonthName(){
+    currentMonthName() {
       return new Date(this.currentYear, this.currentMonth).toLocaleString("default", {month: "long"})
     },
 
-    howYear(){
+    howYear() {
       if (this.nextMonthInt === 0) return this.currentYear
       else return this.currentYear
     },
 
-    currentMonthNameInt(){
+    currentMonthNameInt() {
         return new Date(this.currentYear, this.currentMonth).getMonth()
       },
 
-    nextMonthInt(){
-        return new Date(this.currentYear, this.currentMonth+1,1).getMonth()
-      },
-
-    lastDayMonth(){
+    lastDayMonth() {
       const count = new Date(this.currentYear, this.currentMonth+1, 0).getDate()
       const arr = []
 
       for (let i = 1; i <= count; i++) {
         arr.push({
           name: i,
-          timestamp: new Date(this.currentYear, this.currentMonth, i + 1).getTime()
+          timestamp: new Date(this.currentYear, this.currentMonth, i).getTime()
         })
       }
       return arr
     },
 
-    dayWeek(){
+    dayWeek() {
       return new Date(this.currentYear, this.currentMonth, 0).getDay()
     }
   },
   methods: {
-    ClickNextMonth (){
+    dayChoose(day) {
+      this.chooseDay = this.chooseDay != day.timestamp ? day.timestamp : null
+
+      const date = new Date(this.chooseDay)
+      const fullDate = [
+        date.getDate().toString().padStart(2, '0'),
+        (date.getMonth()+1).toString().padStart(2, '0'),
+        date.getFullYear()
+      ].join('.')
+
+      this.$emit('chooseDay', fullDate)
+    },
+    isClassDay(day) {
+
+      return this.events.find(el => el.timestamp === day.timestamp)
+    },
+    ClickNextMonth() {
         this.currentMonth++
 
         if (this.currentMonth === 12) {
           this.currentYear++
           this.currentMonth = 0}
     },
-      ClickLastMonth (){
+      ClickLastMonth() {
         this.currentMonth--
-        
+
         if (this.currentMonth === -1) {
           this.currentYear--
           this.currentMonth = 11}
@@ -104,6 +121,9 @@ export default {
 
 <style scoped>
 .main {
+  position: absolute;
+  top: 45px;
+  background-color: #fff;
   width: 280px;
   border: 1px solid rgb(174, 174, 174);
   border-radius: 5px;
