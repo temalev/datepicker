@@ -31,11 +31,31 @@ export default {
       isCalendar: false,
       events: [{
         info: "День Святого Валентина",
-        day: '14.02'
+        day: 1676322000000
       },
       {
-        info: "9 Мая",
-        day: '09.05'
+        info: "День Победы",
+        day: 1683579600000
+      },
+      {
+        info: "Международный женский день",
+        day: 1678222800000
+      },
+      {
+        info: "Рождество Христово",
+        day: 1673038800000
+      },
+      {
+        info: "День весны и труда",
+        day: 1682888400000
+      },
+      {
+        info: "День народного единства",
+        day: 1699045200000
+      },
+      {
+        info: "День России",
+        day: 1686517200000
       }]
     }
   },
@@ -94,39 +114,6 @@ export default {
   return filledMask.substring(0, lastReplaceIdx + 1)
     }
   }
-
-  // computed:{
-  //   model: {
-  //     get() {
-  //       return this.currentDate
-  //     },
-  //     set(value) {
-  //       // const cleanValue = value.replace(/[^\d]/g, "")
-  //       this.currentDate = value.replace(/[^\d]/gi, "")
-  //     }
-  //   }
-  // },
-
-//   methods: {
-//     formatDateDDMMYYYY(value) {
-//       const dateFormatMask = "##.##.####"
-
-//       let i = 0;
-// let lastReplaceIdx = -1;
-
-//  const filledDateFormatMask = dateFormatMask.replace(/#/g, (_, j) => {
-//    if (i >= value.length) {
-//    return "#";
-//    }
-
-//    lastReplaceIdx = j;
-
-//    return value[i++];
-//  })
-//  return filledDateFormatMask.substring(0, lastReplaceIdx + 1);
-
-//     }
-//   }
 
 }
 </script>

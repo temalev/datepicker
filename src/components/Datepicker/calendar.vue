@@ -19,19 +19,17 @@
       <div v-for="day in lastDayMonth"
           :key="day.timestamp"
           class="day"
-          :class="chooseDay === day.timestamp 
-          ? 'choose' 
-          : 'day'"
+          :class="isClassDay(day)"
           @click="dayChoose(day)"
           >
-          {{ day.name }} {{ isClassDay(day) }}
+          {{ day.name }}
       </div>
     </div>
   </div>
 </div>
 </template>
-<script>
 
+<script>
 export default {
   name: 'Calendar',
 
@@ -54,6 +52,7 @@ export default {
   },
 
   computed: {
+
     currentMonthName() {
       return new Date(this.currentYear, this.currentMonth).toLocaleString("default", {month: "long"})
     },
@@ -85,8 +84,24 @@ export default {
     }
   },
   methods: {
+    isClassDay(day) {
+      if (this.chooseDay === day.timestamp) {
+        return 'choose'
+      }
+
+      const dayEvent = this.events.find(el => el.day === day.timestamp)
+
+      if (day.timestamp == dayEvent?.day) {
+        console.log('event');
+        return 'event'
+      }
+      
+    },
+
     dayChoose(day) {
       this.chooseDay = this.chooseDay != day.timestamp ? day.timestamp : null
+
+      console.log(day.timestamp);
 
       const date = new Date(this.chooseDay)
       const fullDate = [
@@ -97,10 +112,7 @@ export default {
 
       this.$emit('chooseDay', fullDate)
     },
-    isClassDay(day) {
 
-      return this.events.find(el => el.timestamp === day.timestamp)
-    },
     ClickNextMonth() {
         this.currentMonth++
 
@@ -192,5 +204,9 @@ button:hover {
   background-color: rgba(34, 113, 24, 0.824);
   color: #f6f6f6;
   box-shadow: inset 0 0 5px rgba(23, 76, 16, 0.824);
+}
+
+.event{
+  outline: 2px solid rgba(34, 113, 24, 0.824);
 }
 </style>
