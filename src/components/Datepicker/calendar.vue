@@ -154,6 +154,7 @@ export default {
   position: absolute;
   z-index: 2;
   top: 45px;
+  left: 0;
   background-color: #fff;
   width: 280px;
   border: 1px solid rgb(174, 174, 174);

@@ -106,6 +106,7 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 10px;
+  width: 100%;
 }
 
 .form {
@@ -113,6 +114,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   gap: 15px;
+  width: 80%;
 }
 
 .inputContainer {
@@ -120,6 +122,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   gap: 5px;
+  width: 500px;
 }
 
 .wrapper {
@@ -148,7 +151,8 @@ export default {
   padding: 10px;
   outline: none;
   font-size: 18px;
-  width: 500px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .btnCalendar {
@@ -179,5 +183,11 @@ export default {
 .btnEvent:hover {
   box-shadow: 0 2px 5px rgba(38, 81, 35, 0.435);
   border: 1px solid rgba(111, 111, 111, 0.757);
+}
+
+@media (max-width: 700px) {
+  .inputContainer {
+    width: 100%;
+  }
 }
 </style>
