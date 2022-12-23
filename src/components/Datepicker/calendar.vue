@@ -17,7 +17,7 @@
         <div v-for="dayNull in dayWeek" :key="dayNull" class="day null" />
 
         <div
-          v-for="day in lastDayMonth"
+          v-for="day in dayMonth"
           :key="day.timestamp"
           class="day"
           :class="getClassDay(day)"
@@ -70,7 +70,7 @@ export default {
       return new Date(this.currentYear, this.currentMonth).getMonth();
     },
 
-    lastDayMonth() {
+    dayMonth() {
       const count = new Date(
         this.currentYear,
         this.currentMonth + 1,
